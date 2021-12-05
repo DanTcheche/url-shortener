@@ -43,5 +43,3 @@ Run  ```py.test``` in the terminal.
 
 - We could add an 'expires' date to the Url model if we want to be able to remove urls from the database after a given time has passed.
 That would be desirable if we have millions of users daily.
-- If we have a lot of requests maybe it would be better to store short unique urls and use them instead of encoding each time,
-that would improve the velocity of the APIs.
