@@ -44,10 +44,9 @@ class UrlShortenerView(viewsets.GenericViewSet):
         if not error_message:
             try:
                 url, _ = Url.objects.get_or_create(long_url=long_url)
-            except ValidationError:
-                error_message = 'Url is incorrect, make sure it complies to the following format. http(s)://'
-            except IntegrityError:
-                error_message = 'There was an error with the encoder'
+            except ValidationError as exc:
+                if exc.message == 'Enter a valid URL.':
+                    error_message = 'Url is incorrect, make sure it complies to the following format. http(s)://'
         return url, error_message
 
 
