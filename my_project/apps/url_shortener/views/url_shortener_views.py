@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from my_project.apps.url_shortener.models import Url
 from my_project.apps.url_shortener.serializers.url_serializer import UrlSerializer
@@ -19,13 +20,9 @@ class UrlShortenerView(viewsets.GenericViewSet):
     @action(detail=False, methods=['POST'])
     def encode(self, request):
         long_url = request.data.get('long_url', None)
-        if not long_url:
-            return JsonResponse({'success': False, 'message': 'Long url is necessary'}, status=400)
-        try:
-            url, _ = Url.objects.get_or_create(long_url=long_url)
-        except ValidationError as error:
-            return JsonResponse({'success': False, 'message': 'Url is incorrect, make sure it complies to the following'
-                                                              ' format. http(s)://'}, status=400)
+        url, error_message = self.__try_encoding(long_url)
+        if error_message:
+            return JsonResponse({'success': False, 'message': error_message}, status=400)
         return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
 
     @action(detail=False, methods=['POST'])
@@ -38,6 +35,20 @@ class UrlShortenerView(viewsets.GenericViewSet):
         except Url.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Url not found'}, status=404)
         return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
+
+    def __try_encoding(self, long_url):
+        url = None
+        error_message = None
+        if not long_url:
+            error_message = 'Long url is necessary'
+        if not error_message:
+            try:
+                url, _ = Url.objects.get_or_create(long_url=long_url)
+            except ValidationError:
+                error_message = 'Url is incorrect, make sure it complies to the following format. http(s)://'
+            except IntegrityError:
+                error_message = 'There was an error with the encoder'
+        return url, error_message
 
 
 class RedirectToUrl(APIView):
