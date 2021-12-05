@@ -9,9 +9,14 @@ class TestEncoderDecoder:
     def test_encode_no_collisions_with_small_set(self):
         enconding_strategy = Hex256HexdigestStrategy()
         used_hashes = {}
+        used_random_string = {}
         collisions = 0
         for i in range(10000):
             random_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+            if used_random_string.get('random_string', None):
+                continue
+            else:
+                used_random_string[random_string] = True
             url = 'www.testencode.com/'
             url += f'00000{i}/{random_string}'
             encoded = enconding_strategy.encode(url)
