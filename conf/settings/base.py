@@ -48,7 +48,9 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    'my_project.apps.url_shortener',
+]
 
 VENDOR_APPS = []
 
