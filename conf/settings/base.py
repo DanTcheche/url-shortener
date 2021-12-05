@@ -53,13 +53,15 @@ LOCAL_APPS = [
 ]
 
 VENDOR_APPS = [
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 INSTALLED_APPS = VENDOR_APPS + LOCAL_APPS + DJANGO_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,3 +128,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# CORS
+CORS_WHITELIST = env('CORS_ORIGIN_WHITELIST', default="")
+CORS_ORIGIN_WHITELIST = CORS_WHITELIST.split(",") if CORS_WHITELIST else []
+SESSION_COOKIE_SAMESITE = None
+CORS_ALLOW_CREDENTIALS = True

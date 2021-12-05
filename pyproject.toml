@@ -11,6 +11,7 @@ django-environ = "^0.4.5"
 psycopg2-binary = "^2.8.6"
 djangorestframework = "^3.12.2"
 pytest-django = "^4.1.0"
+django-cors-headers = "^3.10.1"
 
 [tool.poetry.dev-dependencies]
 
