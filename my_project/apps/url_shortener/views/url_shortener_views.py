@@ -21,7 +21,7 @@ class UrlShortenerView(viewsets.GenericViewSet):
         if not long_url:
             return JsonResponse({'success': False, 'message': 'Long url is necessary'}, status=400)
         url, _ = Url.objects.get_or_create(long_url=long_url)
-        return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=400)
+        return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
 
     @action(detail=False, methods=['POST'])
     def decode(self, request):
@@ -32,7 +32,7 @@ class UrlShortenerView(viewsets.GenericViewSet):
             url = Url.objects.get(short_url=short_url)
         except Url.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Url not found'}, status=404)
-        return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=400)
+        return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
 
 
 class RedirectToUrl(APIView):
