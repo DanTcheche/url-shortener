@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 
 from my_project.apps.url_shortener.models import Url
 from my_project.apps.url_shortener.serializers.url_serializer import UrlSerializer
