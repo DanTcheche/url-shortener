@@ -1,0 +1,1 @@
+from my_project.apps.url_shortener.models.url import Url
