@@ -21,18 +21,18 @@ class UrlShortenerView(viewsets.GenericViewSet):
         long_url = request.data.get('long_url', None)
         url, error_message = self.__try_encoding(long_url)
         if error_message:
-            return JsonResponse({'success': False, 'message': error_message}, status=400)
+            return JsonResponse({'success': False, 'message': error_message})
         return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
 
     @action(detail=False, methods=['POST'])
     def decode(self, request):
         short_url = request.data.get('short_url', None)
         if not short_url:
-            return JsonResponse({'success': False, 'message': 'Short url is necessary'}, status=400)
+            return JsonResponse({'success': False, 'message': 'Short url is necessary'})
         try:
             url = Url.objects.get(short_url=short_url)
         except Url.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Url not found'}, status=404)
+            return JsonResponse({'success': False, 'message': 'Url not found'})
         return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
 
     def __try_encoding(self, long_url):
@@ -59,4 +59,4 @@ class RedirectToUrl(APIView):
             url.save()
             return HttpResponseRedirect(redirect_to=url.long_url)
         except Url.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Url not found'}, status=404)
+            return JsonResponse({'success': False, 'message': 'Url not found'})
