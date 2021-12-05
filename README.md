@@ -44,6 +44,7 @@ Run  ```py.test``` in the terminal.
 In the terminal:
 - Get docker container id: `sudo docker ps`
 - Run `sudo docker exec -it a2388b94ac8b python manage.py createsuperuser`
+- Admin url is `/admin`
 
 ### Considerations
 
