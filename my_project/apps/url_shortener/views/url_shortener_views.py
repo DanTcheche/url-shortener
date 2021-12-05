@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponseRedirect
+from django.core.exceptions import ValidationError
 
 from my_project.apps.url_shortener.models import Url
 from my_project.apps.url_shortener.serializers.url_serializer import UrlSerializer
@@ -20,7 +21,11 @@ class UrlShortenerView(viewsets.GenericViewSet):
         long_url = request.data.get('long_url', None)
         if not long_url:
             return JsonResponse({'success': False, 'message': 'Long url is necessary'}, status=400)
-        url, _ = Url.objects.get_or_create(long_url=long_url)
+        try:
+            url, _ = Url.objects.get_or_create(long_url=long_url)
+        except ValidationError as error:
+            return JsonResponse({'success': False, 'message': 'Url is incorrect, make sure it complies to the following'
+                                                              ' format. http(s)://'}, status=400)
         return JsonResponse({'success': True, 'url': UrlSerializer(url).data}, status=200)
 
     @action(detail=False, methods=['POST'])
