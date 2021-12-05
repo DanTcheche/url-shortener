@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 from my_project.apps.url_shortener.encode_strategies.shake_256_hexdigest_strategy import Hex256HexdigestStrategy
 
@@ -29,6 +30,8 @@ class Url(models.Model):
         validator = URLValidator()
         validator(self.long_url)
         self.__generate_short_url()
+        if Url.objects.filter(short_url=self.short_url).exists():
+            raise ValidationError("An element with that short url already exists")
 
     def __generate_short_url(self):
         encoder_strategy = Hex256HexdigestStrategy()
