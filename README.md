@@ -39,6 +39,12 @@ Python 3 can be installed with [pyenv](https://github.com/pyenv/pyenv).
 With the server running and inside the poetry shell after doing the install:
 Run  ```py.test``` in the terminal.
 
+### Create admin user
+
+In the terminal:
+- Get docker container id: `sudo docker ps`
+- Run `sudo docker exec -it a2388b94ac8b python manage.py createsuperuser`
+
 ### Considerations
 
 - We could add an 'expires' date to the Url model if we want to be able to remove urls from the database after a given time has passed.
